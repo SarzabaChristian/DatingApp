@@ -19,14 +19,14 @@ export class ToastService {
     }
   }
 
-  private createToastElement(message: string, alertClass: 'info' | 'warning' | 'succeess' | 'error', duration = 5000) {
+  private createToastElement(message: string, alertClass: 'info' | 'warning' | 'success' | 'error', duration = 5000) {
     const toastContainer = document.getElementById('toast-container');
     if(!toastContainer) {
       return;
     }
 
     const toast = document.createElement('div');
-    toast.classList.add('alert', 'alert-' + alertClass, 'shadow-lg');
+    toast.classList.add('alert', "alert-" + alertClass, 'shadow-lg');
     toast.innerHTML = `
       <span>${message}</span>
       <button class="ml-4 btn btn-sm btn-ghost">x</button>
@@ -45,7 +45,7 @@ export class ToastService {
   }
 
   success(message: string, duration?: number) {
-    this.createToastElement(message, 'succeess', duration);
+    this.createToastElement(message, 'success', duration);
   }
 
   error(message: string, duration?: number) {

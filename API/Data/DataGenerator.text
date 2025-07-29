@@ -1,0 +1,24 @@
+[
+  '{{repeat(5, 7)}}',
+     {
+       "Id":'{{firstName(this.Gender)}}-id',
+       "Email": function () {
+      	return this.Id.replace('-id','') + '@test.com';
+       },
+       "Gender": '{{gender()}}',
+       "DateOfBirth": '{{date(new Date(1990, 0, 1), new Date(2012,0,1), "YYYY-MM-dd")}}',
+       "DisplayName": function () {
+      	return this.Id.replace('-id','');
+       },
+  	  "CreatedDate": '{{date(new Date(2022, 0, 1), new Date(2024,0,1), "YYYY-MM-dd")}}',
+      "LastActive": '{{date(new Date(2024, 0, 1), new Date(), "YYYY-MM-dd")}}',
+       "Description": '{{lorem(1, "paragraphs")}}',
+       "City": '{{city()}}',
+       "Country": '{{country()}}',
+       "ImageUrl": function(){
+         var genderDesc = this.Gender == "female"? "women" : "men";
+         var randomNumber = Math.floor(Math.random() * 100);
+         return 'https://randomuser.me/api/portraits/' + genderDesc + '/' + randomNumber + '.jpg';
+       }
+    }
+]

@@ -1,24 +1,27 @@
+using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
+using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    public class MembersController(AppDbContext context) : BaseApiController
+    public class MembersController(IMemberRepository memberRepository) : BaseApiController
     {
+        [Authorize]
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<AppUser>>> GetMembers()
+        public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers()
         {
-            return await context.Users.ToListAsync();
+            return Ok(await memberRepository.GetMembersAsync());
         }
 
         [Authorize]
         [HttpGet("{id}")]
-        public ActionResult<AppUser> GetMember(string id)
+        public async Task<ActionResult<Member>> GetMember(string id)
         {
-            var member = context.Users.Find(id);
+            var member = await memberRepository.GetMemberByIdAsync(id);
             if (member == null)
             {
                 return NotFound();
@@ -27,23 +30,11 @@ namespace API.Controllers
             return member;
         }
 
-        [HttpPost]
-        public async Task<ActionResult> AddMember(AppUser user)
+        [Authorize]
+        [HttpGet("{id}/photos")]
+        public async Task<ActionResult<IReadOnlyList<Photo>>> GetMemberPhotos(string id)
         {
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var existingUser = await context.Users.FirstOrDefaultAsync(x => x.DisplayName == user.DisplayName && x.Email == user.Email);
-            if (existingUser != null)
-            {
-                return NotFound();
-            }
-
-            context.Users.Add(user);
-            await context.SaveChangesAsync();
-            return Ok();
+            return Ok(await memberRepository.GetPhotosForMemberAsync(id));
         }
     }
 }
